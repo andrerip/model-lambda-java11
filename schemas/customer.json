@@ -1,0 +1,102 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Customers",
+  "id": "urn:jsonschema:br:com:andrerip:models:customer",
+  "type": "object",
+  "title": "Customer",
+  "properties": {
+    "customer": {
+      "nome": {
+        "description": "full customer name",
+        "type": "string",
+        "pattern": "^(?!\\s*$).+"
+      },
+      "email": {
+        "format": "email",
+        "type": "string"
+      },
+      "address": {
+        "$ref": "#/definitions/address"
+      }
+    }
+  },
+  "definitions": {
+    "address": {
+      "description": "customer's address",
+      "type": "object",
+      "title": "Address",
+      "properties": {
+        "state": {
+          "description": "State",
+          "type": "string",
+          "enum": [
+            "AC",
+            "AL",
+            "AP",
+            "AM",
+            "BA",
+            "CE",
+            "DF",
+            "ES",
+            "GO",
+            "MA",
+            "MT",
+            "MS",
+            "MG",
+            "PA",
+            "PB",
+            "PR",
+            "PE",
+            "PI",
+            "RJ",
+            "RN",
+            "RS",
+            "RO",
+            "RR",
+            "SC",
+            "SP",
+            "SE",
+            "TO"
+          ]
+        },
+        "city": {
+          "description": "Cidade do Brasil",
+          "type": "string",
+          "pattern": "^(?!\\s*$).+"
+        },
+        "complement": {
+          "description": "Complemento do Logradouro",
+          "type": "string"
+        },
+        "number": {
+          "description": "Numero do Logradouro",
+          "type": "string",
+          "pattern": "^(?!\\s*$).+"
+        },
+        "neighborhood": {
+          "description": "Bairro",
+          "type": "string",
+          "pattern": "^(?!\\s*$).+"
+        },
+        "logradouro": {
+          "description": "Endereco do cliente",
+          "type": "string",
+          "pattern": "^(?!\\s*$).+"
+        },
+        "cep": {
+          "pattern": "^\\d{5}-?\\d{3}$",
+          "description": "CEP",
+          "type": "string"
+        }
+      },
+      "required": [
+        "cep",
+        "uf",
+        "cidade",
+        "bairro",
+        "logradouro",
+        "numero"
+      ]
+    }
+  }
+}

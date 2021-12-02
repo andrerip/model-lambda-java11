@@ -1,0 +1,54 @@
+service: model-lambda-java11
+
+provider:
+  name: aws
+  runtime: java11
+  timeout: 10
+  role:
+  stage: ${env:ENVIRONMENT, 'dev'}
+  versionFunctions: false
+  tracing:
+    apiGateway: true
+  logs:
+    restApi:
+      accessLogging: false
+      executionLogging: true
+      fullExecutionData: true
+  environment:
+    awsAmbiente: ${env:ENVIRONMENT}
+            
+defaults:
+  stage: ${env:ENVIRONMENT, 'dev'}
+  region: ${env:AWS_REGION, 'us-east-1'}
+  
+package:
+  artifact: target/model-lambda-java11.jar
+  
+plugins:
+  - serverless-domain-manager
+    
+functions:
+  valoresRecarga:
+    handler: br.com.andrerip.handler.CustomerHandler
+    events:
+      - http:
+          path: /v1/customers
+          method: get
+          cors: true
+          authorizer:
+            arn: arn:aws:lambda:us-east-1:${env:ACCOUNT_ID, '444333222111'}:function:api-authorization-${self:provider.stage}-authorize
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization, method.request.header.token
+            type: request
+
+resources:
+  Resources:
+    GatewayResponseBadRequestBody:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        RestApiId: 
+          Ref: 'ApiGatewayRestApi'
+        ResponseType: BAD_REQUEST_BODY
+        ResponseTemplates:
+          application/json: "{\"erros\":[{ \"mensagem\":\"$context.error.validationErrorString\"}]}"
+          
